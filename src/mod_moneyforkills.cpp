@@ -131,7 +131,7 @@ public:
 		{
 			const uint32 PVPMultiplier = sConfigMgr->GetOption<uint32>(MFKPVPKillMult, 0);
 			const uint32 VictimLevel = victim->GetLevel();
-
+			const uint32 KillerLevelDiff = VictimLevel / killer->GetLevel();
 			// If enabled...
 			if (PVPMultiplier > 0)
 			{
@@ -142,7 +142,7 @@ public:
 					return;
 				}
 
-				const int BountyAmount = ((VictimLevel * PVPMultiplier) / 3);
+				const int BountyAmount = ((VictimLevel * PVPMultiplier * KillerLevelDiff) / 3);
 
 				// Pay the player the additional PVP bounty
 				killer->ModifyMoney(BountyAmount);
@@ -152,7 +152,8 @@ public:
 
 			// Calculate the amount of gold to give to the victor
 			const uint32 PVPCorpseLootPercent = sConfigMgr->GetOption<uint32>(MFKPVPCorpseLootPercent, 5);
-			const int VictimLoot = (victim->GetMoney() * PVPCorpseLootPercent) / 100;
+			//altered so that if you are higher level the percentage drops lower
+			const int VictimLoot = (victim->GetMoney() * PVPCorpseLootPercent * KillerLevelDiff) / 100;
 
 			// Rifle the victim's corpse for loot
 			if (victim->GetMoney() >= 10000 && VictimLoot > 0)
