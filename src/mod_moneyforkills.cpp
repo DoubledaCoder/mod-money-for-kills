@@ -143,11 +143,13 @@ public:
 				}
 
 				const int BountyAmount = ((VictimLevel * PVPMultiplier * KillerLevelDiff) / 3);
-
-				// Pay the player the additional PVP bounty
-				killer->ModifyMoney(BountyAmount);
-				// Inform the player of the bounty amount
-				Notify(killer, victim, nullptr, KILLTYPE_PVP, BountyAmount);
+				//Skip process if no bounty being awarded
+				if(BountyAmount > 0){
+					// Pay the player the additional PVP bounty
+					killer->ModifyMoney(BountyAmount);
+					// Inform the player of the bounty amount
+					Notify(killer, victim, nullptr, KILLTYPE_PVP, BountyAmount);
+				}
 			}
 
 			// Calculate the amount of gold to give to the victor
